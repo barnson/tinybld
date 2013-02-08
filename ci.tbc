@@ -1,0 +1,22 @@
+{
+   "name":"TinyBld Project"
+   "interval":"immediate",
+   "force":false,
+   "actions": [
+      {
+         "name":"Build Project",
+         "project":"tinybld.sln",
+         "properties": [
+            "Configuration=Release"
+         ]
+      },
+      {
+         "name":"Test Project",
+         "project":"tinybld.test\bin\Release\test.xunitproj",
+         "target":"test",
+         "testresults": [
+            "tinybld.test\bin\Release\results.xml"
+         ]
+      },
+  ]
+}

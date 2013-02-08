@@ -1,0 +1,23 @@
+{
+   "name":"Interesting Test Project"
+   "day":"friday",
+   "time":"14:30",
+   "force":true,
+   "actions": [
+      {
+         "name":"Build Project",
+         "project":"Release\\interesting.sln",
+         "properties": [
+            "Configuration=Release"
+         ]
+      },
+      {
+         "name":"Test Project",
+         "project":"interesting.test\\bin\\Release\\test.xunitproj",
+         "target":"test",
+         "testresults": [
+            "interesting.test\\bin\\Release\\results.xml"
+         ]
+      },
+  ]
+}

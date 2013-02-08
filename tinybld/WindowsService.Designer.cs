@@ -3,7 +3,7 @@
     using System;
     using System.ComponentModel;
 
-    partial class TinyBuildWindowsService
+    partial class WindowsService
     {
         /// <summary> 
         /// Required designer variable.

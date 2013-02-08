@@ -1,0 +1,17 @@
+﻿{
+  "port" : 31337,
+  "repositories" : [
+    {
+      "type" : "git",
+      "path" : "https://github.com/robmen/tinybld.git",
+    },
+    {
+      "type" : "hg",
+      "path" : "https://hg.codeplex.com/wix",
+      "branch" : "wix40",
+      "properties" : [
+        "OfficialBuild=true",
+      ]
+    },
+  ]
+}

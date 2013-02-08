@@ -1,29 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceProcess;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace RobMensching.TinyBuild
+﻿namespace RobMensching.TinyBuild
 {
+    using System;
+    using System.IO;
+    using System.ServiceProcess;
+    using System.Threading;
+    using RobMensching.TinyBuild.Configuration;
+    using RobMensching.TinyBuild.Data;
+
     public class Program
     {
         private static bool runAsService;
         private static AutoResetEvent consoleWait = new AutoResetEvent(false);
-        private TinyBuildAppHost appHost;
-        private Thread workerThread;
-        private AutoResetEvent serviceWait;
-
-        public Program()
-        {
-            this.appHost = new TinyBuildAppHost();
-            this.appHost.Init();
-
-            this.serviceWait = new AutoResetEvent(false);
-            this.workerThread = new Thread(Program.BuildWorker);
-        }
 
         static void Main(string[] args)
         {
@@ -35,51 +22,54 @@ namespace RobMensching.TinyBuild
                 }
             }
 
-            Program program = new Program();
 
-            if (Program.runAsService)
+            var serverData = ServerData.Load("tb.json");
+
+            ServiceConfiguration serviceConfig = LoadServiceConfiguration();
+            using (BuildService buildService = new BuildService()
+                {
+                    ServerConfig = serviceConfig,
+                    ServerData = serverData,
+                })
             {
-                ServiceBase.Run(new TinyBuildWindowsService(program));
+                if (Program.runAsService)
+                {
+                    using (var svc = new WindowsService(buildService))
+                    {
+                        ServiceBase.Run(svc);
+                    }
+                }
+                else
+                {
+                    Console.CancelKeyPress += Console_CancelKeyPress;
+                    buildService.Start();
+
+                    Console.WriteLine("Press CTRL+C to exit tiny build.");
+
+                    // Wait for user to cancel the build service.
+                    Program.consoleWait.WaitOne();
+
+                    buildService.Stop();
+                }
             }
-            else
+        }
+
+        private static ServiceConfiguration LoadServiceConfiguration()
+        {
+            string serviceConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"tinybld\config.json");
+            if (!File.Exists(serviceConfigPath))
             {
-                Console.CancelKeyPress += Console_CancelKeyPress;
-                program.Start();
-
-                Console.WriteLine("Press CTRL+C to exit tiny build.");
-
-                // Wait for user to cancel the build service.
-                Program.consoleWait.WaitOne();
-
-                program.Stop();
+                return new ServiceConfiguration();
             }
-        }
 
-        internal void Start()
-        {
-            string listeningOn = "http://localhost:1337/";
-            appHost.Start(listeningOn);
-
-            this.serviceWait.Reset();
-            this.workerThread.Start(this);
-        }
-
-        internal void Stop()
-        {
-            this.appHost.Stop();
-
-            this.serviceWait.Set();
-            this.workerThread.Join(5000);
-        }
-
-        private static void BuildWorker(object data)
-        {
-            Program program = (Program)data;
-
-            int timeout = 0;
-            while (!program.serviceWait.WaitOne(timeout))
+            try
             {
-                timeout = 1000;
+                return ServiceConfiguration.Load(serviceConfigPath);
+            }
+            catch (ApplicationException) // TODO: catch the correct exception
+            {
+                // TODO: Display a useful error message.
+                throw;
             }
         }
 
