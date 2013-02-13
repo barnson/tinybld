@@ -2,13 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using RobMensching.TinyBuild.Configuration;
     using RobMensching.TinyBuild.Data;
 
     public class BuildManager
     {
-        private Queue<Builder> queue = new Queue<Builder>();
+        public string WorkingFolder { get; set; }
 
         public BuildConfiguration Config { get; set; }
 
@@ -32,6 +33,7 @@
                 {
                     Config = config,
                     Data = datum ?? new BuildData() { Path = relativeConfigPath },
+                    WorkingFolder = Path.GetFullPath(repositoryPath),
                 };
         }
 
@@ -39,7 +41,7 @@
         /// Calculates the next build time.
         /// </summary>
         /// <returns>Date time for next build.</returns>
-        public DateTime CalculateNextBuild()
+        public DateTime CalculateNextBuildTime()
         {
             DateTime nextBuild = this.Data.LastBuild;
             if (this.Config.Time.HasValue)
@@ -56,17 +58,41 @@
             return nextBuild;
         }
 
+        /// <summary>
+        /// Determines if build is out of date based on when the last update was.
+        /// </summary>
+        /// <param name="lastUpdated">Time when source code was last updated.</param>
+        /// <returns>True if build is required.</returns>
         public bool BuildOutOfDate(DateTime lastUpdated)
         {
-            DateTime nextBuild = CalculateNextBuild();
-            return lastUpdated > nextBuild;
+            DateTime nextBuild = this.CalculateNextBuildTime();
+            return lastUpdated >= nextBuild;
         }
 
-        public void Queue(Builder builder)
+        public void Build(BuildService buildService)
         {
-            if (!queue.Contains(builder))
+            this.Status = BuildStatus.Building;
+
+            this.Data.LastBuild = DateTime.UtcNow;
+
+            try
             {
-                queue.Enqueue(builder);
+                foreach (var action in this.Config.Actions)
+                {
+                    MsbuildProcess msbuild = new MsbuildProcess(action.Project, action.Target, this.WorkingFolder);
+                    msbuild.PopulateProperties(action.Properties);
+
+                    msbuild.Build();
+
+                    if (msbuild.ExitCode != 0 && !action.ContinueOnError)
+                    {
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                this.Status = BuildStatus.Idle;
             }
         }
     }

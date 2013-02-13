@@ -15,5 +15,21 @@
                 return data;
             }
         }
+
+        public ServerData Save(string path)
+        {
+            DirectoryInfo directory = new DirectoryInfo(Path.GetDirectoryName(path));
+            if (!directory.Exists)
+            {
+                directory.Create();
+            }
+
+            using (StreamWriter writer = File.CreateText(path))
+            {
+                JsonSerializer.SerializeToWriter<ServerData>(this, writer);
+            }
+
+            return this;
+        }
     }
 }

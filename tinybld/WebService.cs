@@ -9,11 +9,11 @@
 
     public class WebService : Service
     {
-        public BuildService BuildManager { get; set; }
+        public BuildService BuildService { get; set; }
 
         public object Any(Status status)
         {
-            return new Status() { BuildStatus = this.BuildManager.Status };
+            return new Status() { ServiceStatus = this.BuildService.Status };
             //return this.BuildManager.Status;
         }
 

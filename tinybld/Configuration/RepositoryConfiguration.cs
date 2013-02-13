@@ -21,6 +21,8 @@
 
         public string Branch { get; set; }
 
+        public int Interval { get; set; }
+
         public string[] Properties { get; set; }
 
         internal static RepositoryConfiguration Load(string path)

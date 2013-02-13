@@ -45,8 +45,10 @@
   <ItemGroup>
     <Compile Include="BuildConfigurationFixture.cs" />
     <Compile Include="BuildManagerFixture.cs" />
+    <Compile Include="ConfigurationDataManagerFixture.cs" />
     <Compile Include="DateTimeFixture.cs" />
     <Compile Include="GitRepositoryFixture.cs" />
+    <Compile Include="MsbuildProcessFixture.cs" />
     <Compile Include="PathExtensionFixture.cs" />
     <Compile Include="ProcessManagerFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -58,20 +60,26 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Resources\git.tbrepo.test">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="Resources\gittest.repo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\hgtest.repo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\interesting.tbconfig.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\empty.tbconfig.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\empty.tbc.test">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\interesting.tbc.test">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\test.proj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\testrepo\.git\COMMIT_EDITMSG">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -107,7 +115,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\test.cmd">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>

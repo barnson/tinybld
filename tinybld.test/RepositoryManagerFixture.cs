@@ -9,9 +9,9 @@
         [Fact]
         public void CanCreateSimpleRepositoryManager()
         {
-            var repoMan = RepositoryManager.Create(@"Resources\git.tbrepo.test", new RepositoryData[0]);
-            Assert.Equal(@"C:\tinybuild.repos\git.tbrepo", repoMan.Data.LocalPath);
-            Assert.Equal(@"C:\tinybuild.repos\git.tbrepo", repoMan.Repository.LocalRepositoryPath);
+            var repoMan = RepositoryManager.Create(@"Resources\gittest.repo", new RepositoryData[0]);
+            Assert.Equal(@"C:\tinybuild.repos\gittest", repoMan.Data.LocalPath);
+            Assert.Equal(@"C:\tinybuild.repos\gittest", repoMan.Repository.LocalRepositoryPath);
             Assert.Equal("https://github.com/robmen/tinybld.git", repoMan.Data.RepositoryPath);
             Assert.Equal("https://github.com/robmen/tinybld.git", repoMan.Repository.RemoteRepositoryPath);
             Assert.Null(repoMan.Repository.Branch);
@@ -26,7 +26,7 @@
                 new RepositoryData() { RepositoryPath = "https://github.com/robmen/tinybld.git", LocalPath = @"C:\build\git" },
             };
 
-            var repoMan = RepositoryManager.Create(@"Resources\git.tbrepo.test", repoData);
+            var repoMan = RepositoryManager.Create(@"Resources\gittest.repo", repoData);
             Assert.Equal(@"C:\build\git", repoMan.Data.LocalPath);
             Assert.Equal(@"C:\build\git", repoMan.Repository.LocalRepositoryPath);
         }
@@ -34,7 +34,7 @@
         [Fact]
         public void CanGetNextReadyBuild()
         {
-            var repoMan = RepositoryManager.Create(@"Resources\git.tbrepo.test", new []
+            var repoMan = RepositoryManager.Create(@"Resources\gittest.repo", new []
                 {
                     new RepositoryData()
                         {
@@ -52,7 +52,7 @@
                             },
                         },
                 });
-            repoMan.GatherConfigurations = new BuildManagerConfigurationGatherer("interesting.tbc.test");
+            repoMan.GatherConfigurations = new ConfigurationGatherer("interesting.tbc.test");
 
             var buildMan = repoMan.GetNextReadyBuild();
             Assert.NotNull(buildMan);

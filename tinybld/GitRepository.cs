@@ -122,6 +122,20 @@
             return RepositoryStatus.Error;
         }
 
+        public void Clean()
+        {
+            ProcessManager cleanCmd = null;
+            if (Directory.Exists(this.LocalRepositoryPath))
+            {
+                var args = new[]
+                    {
+                        "clean",
+                        "-dxf",
+                    };
+                cleanCmd = new ProcessManager("git", args, this.LocalRepositoryPath).Run();
+            }
+        }
+
         /// <summary>
         /// Pull the changes from origin to make the local repository up to date.
         /// </summary>

@@ -11,5 +11,7 @@
         public string Target { get; set; }
 
         public string[] TestResults { get; set; }
+
+        public bool ContinueOnError { get; set; }
     }
 }

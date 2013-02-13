@@ -50,6 +50,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.2.0.0.2000\lib\net40\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack">
       <HintPath>..\packages\ServiceStack.3.9.33\lib\net35\ServiceStack.dll</HintPath>
     </Reference>
@@ -87,6 +90,7 @@
     <Compile Include="Builder.cs" />
     <Compile Include="BuildManager.cs" />
     <Compile Include="BuildService.cs" />
+    <Compile Include="ConfigurationDataManager.cs" />
     <Compile Include="Configuration\BuildActionConfiguration.cs" />
     <Compile Include="Configuration\BuildConfiguration.cs" />
     <Compile Include="Configuration\RepositoryConfiguration.cs" />
@@ -95,9 +99,11 @@
     <Compile Include="Data\ServerData.cs" />
     <Compile Include="Data\RepositoryData.cs" />
     <Compile Include="GitRepository.cs" />
-    <Compile Include="BuildManagerConfigurationGatherer.cs" />
+    <Compile Include="ConfigurationGatherer.cs" />
+    <Compile Include="HgRepository.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="Job.cs" />
+    <Compile Include="MsbuildProcess.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="PathExtension.cs" />
     <Compile Include="ProcessManager.cs" />
@@ -118,6 +124,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="tinybld.exe.nlog">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

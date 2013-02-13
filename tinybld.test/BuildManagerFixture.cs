@@ -23,7 +23,7 @@
                 },
             };
 
-            Assert.Equal(new DateTime(2013, 2, 8, 14, 30, 0), bm.CalculateNextBuild());
+            Assert.Equal(new DateTime(2013, 2, 8, 14, 30, 0), bm.CalculateNextBuildTime());
         }
 
         [Fact]
@@ -40,7 +40,7 @@
                 },
             };
 
-            Assert.Equal(new DateTime(2013, 2, 4, 16, 12, 59), bm.CalculateNextBuild());
+            Assert.Equal(new DateTime(2013, 2, 4, 16, 12, 59), bm.CalculateNextBuildTime());
         }
 
         [Fact]
@@ -58,7 +58,7 @@
                 },
             };
 
-            Assert.Equal(new DateTime(2013, 2, 8, 16, 12, 59), bm.CalculateNextBuild());
+            Assert.Equal(new DateTime(2013, 2, 8, 16, 12, 59), bm.CalculateNextBuildTime());
         }
 
         [Fact]
@@ -76,7 +76,7 @@
                 },
             };
 
-            Assert.Equal(new DateTime(2013, 2, 4, 14, 30, 0), bm.CalculateNextBuild());
+            Assert.Equal(new DateTime(2013, 2, 4, 14, 30, 0), bm.CalculateNextBuildTime());
         }
 
         [Fact]
@@ -94,7 +94,28 @@
                 },
             };
 
-            Assert.Equal(new DateTime(2013, 2, 5, 14, 30, 0), bm.CalculateNextBuild());
+            Assert.Equal(new DateTime(2013, 2, 5, 14, 30, 0), bm.CalculateNextBuildTime());
+        }
+
+        [Fact]
+        public void CanDetectBuildOutOfDate()
+        {
+            var bm = new BuildManager()
+            {
+                Config = new BuildConfiguration()
+                {
+                    Time = new TimeSpan(14, 30, 0),
+                },
+                Data = new BuildData()
+                {
+                    LastBuild = new DateTime(2013, 2, 4, 16, 12, 59),
+                },
+            };
+
+            Assert.False(bm.BuildOutOfDate(new DateTime(2013, 2, 4, 14, 30, 00)));
+            Assert.False(bm.BuildOutOfDate(new DateTime(2013, 2, 5, 14, 29, 59)));
+            Assert.True(bm.BuildOutOfDate(new DateTime(2013, 2, 5, 14, 30, 00)));
+            Assert.True(bm.BuildOutOfDate(new DateTime(2013, 2, 6, 14, 30, 00)));
         }
     }
 }

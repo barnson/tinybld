@@ -1,26 +1,30 @@
 ﻿namespace RobMensching.TinyBuild
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using ServiceStack.ServiceHost;
+
+    public enum ServiceStatus
+    {
+        Unknown,
+        Starting,
+        Idle,
+        Building,
+        Stopping,
+        Stopped,
+    }
 
     public enum BuildStatus
     {
         Unknown,
-        Waiting,
+        Idle,
+        Queued,
         Building,
-        Starting,
-        Stopped,
-        Stopping,
     }
 
     [Route("/status")]
     public class Status
     {
-        public BuildStatus BuildStatus { get; set; }
+        public ServiceStatus ServiceStatus { get; set; }
     }
 
     [Route("/statuses")]

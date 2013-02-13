@@ -14,9 +14,11 @@
     /// </summary>
     public class RepositoryManager
     {
-        public BuildManagerConfigurationGatherer GatherConfigurations { get; set; }
+        public ConfigurationGatherer GatherConfigurations { get; set; }
 
         public IRepository Repository { get; set; }
+
+        public TimeSpan Interval { get; set; }
 
         public RepositoryData Data { get; set; }
 
@@ -24,7 +26,7 @@
 
         public RepositoryManager()
         {
-            this.GatherConfigurations = new BuildManagerConfigurationGatherer("*.tbc");
+            this.GatherConfigurations = new ConfigurationGatherer("*.tbc");
         }
 
         /// <summary>
@@ -37,12 +39,20 @@
         {
             RepositoryConfiguration config = RepositoryConfiguration.Load(configPath);
 
-            RepositoryData datum = data.Where(d => d.RepositoryPath.Equals(config.Path, StringComparison.OrdinalIgnoreCase))
-                                       .SingleOrDefault()
-                                       ?? new RepositoryData()
-                                          {
-                                            RepositoryPath = config.Path,
-                                          };
+            RepositoryData datum = null;
+            if (data != null)
+            {
+                datum = data.Where(d => d.RepositoryPath.Equals(config.Path, StringComparison.OrdinalIgnoreCase))
+                            .SingleOrDefault();
+            }
+            
+            if (datum == null)
+            {
+                datum = new RepositoryData()
+                {
+                    RepositoryPath = config.Path,
+                };
+            }
 
             if (String.IsNullOrEmpty(datum.LocalPath))
             {
@@ -62,7 +72,13 @@
                     break;
 
                 case RepositoryType.Hg:
-                    throw new NotImplementedException();
+                    repository = new HgRepository()
+                    {
+                        Branch = config.Branch,
+                        LocalRepositoryPath = datum.LocalPath,
+                        RemoteRepositoryPath = config.Path,
+                    };
+                    break;
 
                 default:
                     throw new InvalidOperationException(String.Format("Repository configuration with path {0} specified an invalid type: {1}. Supported configuration is: git or mercurial", config.Path, config.Type));
@@ -70,6 +86,7 @@
 
             return new RepositoryManager()
             {
+                Interval = config.Interval == 0 ? new TimeSpan(0, 5, 0) : new TimeSpan(0, config.Interval, 0),
                 Repository = repository,
                 Data = datum,
             };
@@ -79,19 +96,31 @@
         /// Updates the repository if the interval has elapsed.
         /// </summary>
         /// <param name="interval">Interval between updates.</param>
-        public void Update(TimeSpan interval)
+        public bool Update()
         {
-            DateTime now = DateTime.Now;
-            if (now.Subtract(this.Data.LastUpdate) >= interval)
+            bool updated = false;
+
+            DateTime now = DateTime.UtcNow;
+            if (now.Subtract(this.Data.LastUpdate) >= this.Interval)
             {
                 this.Data.LastChecked = now;
 
                 if (this.Repository.Update())
                 {
+                    updated = true;
+
                     this.Data.LastUpdate = now;
                     this.BuildManagers = null;
                 }
             }
+
+            return updated;
+        }
+
+        public RepositoryManager Clean()
+        {
+            this.Repository.Clean();
+            return this;
         }
 
         /// <summary>

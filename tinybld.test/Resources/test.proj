@@ -1,0 +1,18 @@
+﻿<?xml version='1.0'?>
+<Project DefaultTargets='TestDefault' ToolsVersion='4.0' xmlns='http://schemas.microsoft.com/developer/msbuild/2003'>
+  <Target Name='TestDefault'>
+    <Message Importance='high' Text='TestProperty = $(TestProperty) default' />
+  </Target>
+
+  <Target Name='Test'>
+    <Message Importance='high' Text='TestProperty = $(TestProperty) success' />
+  </Target>
+
+  <Target Name='TestError'>
+    <Error Text='TestProperty = $(TestProperty) failed' />
+  </Target>
+
+  <Target Name='TestWarning'>
+    <Warning Text='TestProperty = $(TestProperty) warning' />
+  </Target>
+</Project>

@@ -41,6 +41,11 @@
         RepositoryStatus Check();
 
         /// <summary>
+        /// Cleans the local repository of any non-committed files.
+        /// </summary>
+        void Clean();
+
+        /// <summary>
         /// Pull the changes from origin to make the local repository up to date.
         /// </summary>
         /// <param name="rebase">Rebase the changes instead of merging.</param>

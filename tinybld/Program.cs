@@ -4,15 +4,18 @@
     using System.IO;
     using System.ServiceProcess;
     using System.Threading;
+    using NLog;
     using RobMensching.TinyBuild.Configuration;
     using RobMensching.TinyBuild.Data;
 
     public class Program
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         private static bool runAsService;
         private static AutoResetEvent consoleWait = new AutoResetEvent(false);
 
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             for (int i = 0; i < args.Length; ++i)
             {
@@ -22,18 +25,28 @@
                 }
             }
 
+            logger.Info("TinyBuild loading configuration.");
 
-            var serverData = ServerData.Load("tb.json");
+            ConfigurationDataManager configuration;
+            try
+            {
+                configuration = new ConfigurationDataManager().Load();
+            }
+            catch (Exception e)
+            {
+                logger.FatalException("Failed to parse configuration.", e);
+                return 1;
+            }
 
-            ServiceConfiguration serviceConfig = LoadServiceConfiguration();
             using (BuildService buildService = new BuildService()
                 {
-                    ServerConfig = serviceConfig,
-                    ServerData = serverData,
+                    Configuration = configuration,
                 })
             {
                 if (Program.runAsService)
                 {
+                    logger.Trace("TinyBuild running as service.");
+
                     using (var svc = new WindowsService(buildService))
                     {
                         ServiceBase.Run(svc);
@@ -41,6 +54,8 @@
                 }
                 else
                 {
+                    logger.Trace("TinyBuild running as console.");
+
                     Console.CancelKeyPress += Console_CancelKeyPress;
                     buildService.Start();
 
@@ -52,25 +67,9 @@
                     buildService.Stop();
                 }
             }
-        }
 
-        private static ServiceConfiguration LoadServiceConfiguration()
-        {
-            string serviceConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"tinybld\config.json");
-            if (!File.Exists(serviceConfigPath))
-            {
-                return new ServiceConfiguration();
-            }
-
-            try
-            {
-                return ServiceConfiguration.Load(serviceConfigPath);
-            }
-            catch (ApplicationException) // TODO: catch the correct exception
-            {
-                // TODO: Display a useful error message.
-                throw;
-            }
+            logger.Info("TinyBuild exiting.");
+            return 0;
         }
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)

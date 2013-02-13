@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tinybld", "tinybld\tinybld.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tinybld.tests", "tinybld.test\tinybld.tests.csproj", "{6FC713E5-F1E1-431E-8C12-BFCDE4244451}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fooexe", "TestResults\foo\fooexe\fooexe.csproj", "{1C8E6B1E-5E4B-4994-8D71-30BA1526DD44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{6FC713E5-F1E1-431E-8C12-BFCDE4244451}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FC713E5-F1E1-431E-8C12-BFCDE4244451}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FC713E5-F1E1-431E-8C12-BFCDE4244451}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C8E6B1E-5E4B-4994-8D71-30BA1526DD44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C8E6B1E-5E4B-4994-8D71-30BA1526DD44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C8E6B1E-5E4B-4994-8D71-30BA1526DD44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C8E6B1E-5E4B-4994-8D71-30BA1526DD44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

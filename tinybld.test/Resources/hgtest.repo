@@ -1,0 +1,8 @@
+﻿{
+  "type" : "hg",
+  "path" : "https://hg.codeplex.com/wix",
+  "branch" : "wix40",
+  "properties" : [
+    "OfficialBuild=true",
+  ]
+}
