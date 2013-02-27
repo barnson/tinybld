@@ -61,6 +61,7 @@
                     throw new FileNotFoundException("Could not locate executable on the PATH.", this.Executable);
                 }
 
+                this.Executable = executablePath;
                 extension = Path.GetExtension(executablePath);
             }
 
