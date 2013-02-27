@@ -1,9 +1,7 @@
 ﻿namespace RobMensching.TinyBuild.Tests
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using RobMensching.TinyBuild.Tests.Helpers;
     using Xunit;
 
@@ -132,13 +130,13 @@
             Assert.Equal(2, changes.Length);
             Assert.False(String.IsNullOrEmpty(changes[0].Id));
             Assert.False(String.IsNullOrEmpty(changes[0].Author));
-            Assert.Equal("Added a.txt in original testrepo.", changes[0].Message);
+            Assert.Equal("commit added.txt", changes[0].Message);
             Assert.False(String.IsNullOrEmpty(changes[1].Id));
             Assert.False(String.IsNullOrEmpty(changes[1].Author));
-            Assert.Equal("commit added.txt", changes[1].Message);
-            Assert.True(changes[0].Date < changes[1].Date);
+            Assert.Equal("Added a.txt in original testrepo.", changes[1].Message);
+            Assert.True(changes[0].Date > changes[1].Date);
 
-            changes = repo.Changes(changes[0].Id);
+            changes = repo.Changes(changes[1].Id);
             Assert.Equal(1, changes.Length);
             Assert.False(String.IsNullOrEmpty(changes[0].Id));
             Assert.False(String.IsNullOrEmpty(changes[0].Author));

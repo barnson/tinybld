@@ -29,7 +29,6 @@
                         {
                             "log",
                             "--date=rfc",
-                            "--reverse",
                             String.IsNullOrEmpty(since) ? String.Empty : since + "..",
                             until ?? String.Empty,
                             filename ?? String.Empty,
